@@ -1,4 +1,5 @@
-﻿using Application.Services.Interfaces;
+﻿using System.ComponentModel.DataAnnotations;
+using Application.Services.Interfaces;
 using Application.Transformer.Interface;
 using Contracts.Requests;
 using Contracts.Responses;
@@ -24,10 +25,10 @@ public class ScanController : ControllerBase
     }
 
     [HttpPost("scan")]
-    [ProducesResponseType(StatusCodes.Status201Created)]       // Created
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]    // Validation failure
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)] // Unexpected error
-    public async Task<IActionResult> ScanAsync([FromBody] ScanRequestContract request)
+    [ProducesResponseType(StatusCodes.Status201Created)]                // Created
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]             // Validation failure
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]    // Unexpected error
+    public async Task<IActionResult> ScanAsync([FromBody, Required] ScanRequestContract request)
     {
         try
         {
