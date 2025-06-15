@@ -2,7 +2,7 @@
 
 namespace Core.Models.Scan;
 
-public class ScanResponse
+public class ScanResponseEntity
 {
     public List<VulnerablePackage> VulnerablePackages { get; set; } = new();
 }

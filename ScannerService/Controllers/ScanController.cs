@@ -1,5 +1,8 @@
 ﻿using Application.Services.Interfaces;
+using Application.Transformer.Interface;
 using Contracts.Requests;
+using Contracts.Responses;
+using Core.Models.Scan;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ScannerService.Controllers;
@@ -9,13 +12,15 @@ namespace ScannerService.Controllers;
 public class ScanController : ControllerBase
 {
 
-    private readonly IVulnerabilityScannerService _scanner;
+    private readonly IVulnerabilityScannerService _vulnerabilityScannerService;
+    private readonly IVulnerabilityScannerTransformer _vulnerabilityScannerTransformer;
     private readonly ILogger<ScanController> _logger;
 
-    public ScanController(IVulnerabilityScannerService scanner, ILogger<ScanController> logger)
+    public ScanController(IVulnerabilityScannerService vulnerabilityScannerService, IVulnerabilityScannerTransformer vulnerabilityScannerTransformer, ILogger<ScanController> logger)
     {
-        _scanner = scanner;
         _logger = logger;
+        _vulnerabilityScannerService = vulnerabilityScannerService;
+        _vulnerabilityScannerTransformer = vulnerabilityScannerTransformer;
     }
 
     [HttpPost("scan")]
@@ -26,9 +31,13 @@ public class ScanController : ControllerBase
     {
         try
         {
-            var result = await _scanner.ScanAsync(request);
+            ScanRequestEntity scanRequestEntity = _vulnerabilityScannerTransformer.TransformToScanRequestEntity(request);
 
-            return Ok(result);
+            ScanResponseEntity result = await _vulnerabilityScannerService.ScanAsync(scanRequestEntity);
+
+            ScanResponseContract responseContract = _vulnerabilityScannerTransformer.TransformToScanResponseContract(result);
+
+            return Ok(responseContract);
         }
         catch (ArgumentException ex)
         {
