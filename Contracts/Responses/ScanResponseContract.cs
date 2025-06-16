@@ -4,5 +4,5 @@ namespace Contracts.Responses;
 
 public record ScanResponseContract
 {
-    public List<VulnerablePackage> VulnerablePackages { get; set; } = new();
+    public List<VulnerablePackage> VulnerablePackages { get; init; } = new();
 }

@@ -4,5 +4,5 @@ namespace Core.Models.Scan;
 
 public class ScanResponseEntity
 {
-    public List<VulnerablePackage> VulnerablePackages { get; set; } = new();
+    public IReadOnlyCollection<VulnerablePackage> VulnerablePackages { get; init; } = new List<VulnerablePackage>();
 }

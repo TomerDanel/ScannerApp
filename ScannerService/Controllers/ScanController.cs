@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Application.Services.Interfaces;
 using Application.Transformer.Interface;
+using Contracts.Errors;
 using Contracts.Requests;
 using Contracts.Responses;
 using Core.Models.Scan;
@@ -42,8 +43,8 @@ public class ScanController : ControllerBase
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning("Invalid request: {Message}", ex.Message);
-            return BadRequest(new { error = ex.Message });
+            _logger.LogError("Invalid request: {Message}", ex.Message);
+            return BadRequest(new ErrorMessage(ex.Message));
         }
         catch (NotSupportedException ex)
         {

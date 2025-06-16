@@ -2,6 +2,6 @@
 
 public class ScanRequestEntity
 {
-    public string Ecosystem { get; set; } = null!;
-    public string FileContent { get; set; } = null!;
+    public string Ecosystem { get; init; } = null!;
+    public string FileContent { get; init; } = null!;
 }

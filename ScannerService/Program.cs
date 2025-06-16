@@ -1,3 +1,12 @@
+using Application.Factory;
+using Application.Factory.Interfaces;
+using Application.Parser;
+using Application.Services;
+using Application.Services.Interfaces;
+using Application.Transformer;
+using Application.Transformer.Interface;
+using Infrastructure.Provider;
+using ScannerService.Extensions;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +22,17 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog(); // Replace default .NET logger
 
 // Add services to the container.
+builder.Services.AddSingleton<IVulnerabilityScannerTransformer, VulnerabilityScannerTransformer>();
+builder.Services.AddSingleton<IPackageFileParserFactory, PackageFileParserFactory>();
+builder.Services.AddSingleton<IVulnerabilityScannerService, VulnerabilityScannerService>();
+builder.Services.AddSingleton<IVulnerabilityProvider, GitHubVulnerabilityProvider>();
+builder.Services.AddSingleton<NpmPackageParser>();
 
 builder.Services.AddControllers();
+
+//Register HttpCliet
+builder.Services.AddHttpGithubGraphQLClient(builder.Configuration);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
