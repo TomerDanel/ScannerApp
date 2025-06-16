@@ -58,7 +58,7 @@ public class GithubGraphQLClient : IGithubGraphQLClient
     {
         return $@"
         {{
-            securityVulnerabilities(ecosystem: ""{ecosystem.ToUpper()}"", first: 100, package: ""{packageName}"") {{
+            securityVulnerabilities(ecosystem: {ecosystem.ToUpper()}, first: 100, package: ""{packageName}"") {{
                 nodes {{
                     severity
                     advisory {{
