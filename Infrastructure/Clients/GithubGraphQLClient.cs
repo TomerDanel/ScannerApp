@@ -24,11 +24,13 @@ public class GithubGraphQLClient : IGithubGraphQLClient
     {
         try
         {
-            string url = "/graphql";
+            string url = "graphql";
             HttpClient htppClient = _httpClientFactory.CreateClient(nameof(GithubGraphQLClient));
 
             string query = BuildVulnerabilityQuery(packageName, ecosystem);
-            string json = JsonSerializer.Serialize(query);
+            var graphQLPayload = new { query };
+
+            string json = JsonSerializer.Serialize(graphQLPayload);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             HttpResponseMessage response = await htppClient.PostAsync(url, content);
@@ -37,7 +39,9 @@ public class GithubGraphQLClient : IGithubGraphQLClient
 
             string responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<GitHubGraphQLResponse>(responseContent);
+            GitHubGraphQLResponse? result = JsonSerializer.Deserialize<GitHubGraphQLResponse>(responseContent);
+
+            return result;
         }
         catch (Exception ex)
         {
@@ -54,7 +58,7 @@ public class GithubGraphQLClient : IGithubGraphQLClient
     {
         return $@"
         {{
-            securityVulnerabilities(ecosystem: ""{ecosystem}"", first: 100, package: ""{packageName}"") {{
+            securityVulnerabilities(ecosystem: ""{ecosystem.ToUpper()}"", first: 100, package: ""{packageName}"") {{
                 nodes {{
                     severity
                     advisory {{

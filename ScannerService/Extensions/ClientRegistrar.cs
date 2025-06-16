@@ -17,6 +17,8 @@ public static class ClientRegistrar
         serviceCollection.AddHttpClient(nameof(GithubGraphQLClient), httpClient =>
         {
             httpClient.BaseAddress = baseUri;
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {githubGraphQlConfiguration.GithubAccessToken}");
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "CycodeVulnerabilityScanner/1.0");
         });
 
         serviceCollection.AddSingleton<IGithubGraphQLClient, GithubGraphQLClient>();

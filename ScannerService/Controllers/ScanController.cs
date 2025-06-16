@@ -26,7 +26,7 @@ public class ScanController : ControllerBase
     }
 
     [HttpPost("scan")]
-    [ProducesResponseType(StatusCodes.Status201Created)]                // Created
+    [ProducesResponseType(StatusCodes.Status200OK)]                      // Ok
     [ProducesResponseType(StatusCodes.Status400BadRequest)]             // Validation failure
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]    // Unexpected error
     public async Task<IActionResult> ScanAsync([FromBody, Required] ScanRequestContract request)
@@ -50,6 +50,11 @@ public class ScanController : ControllerBase
         {
             _logger.LogWarning("Unsupported ecosystem: {Message}", ex.Message);
             return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while creating contact.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
         }
     }
 }
