@@ -1,11 +1,8 @@
 ﻿using Infrastructure.Clients.Interface;
 using Infrastructure.Models.GithubVulnerabilities;
 using Microsoft.Extensions.Logging;
-using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text;
-using System.Net.Http;
-using System.Threading;
+using System.Text.Json;
 
 namespace Infrastructure.Clients;
 
@@ -23,14 +20,14 @@ public class GithubGraphQLClient : IGithubGraphQLClient
 
     #region Public Methods
 
-    public async Task<SecurityVulnerabilities> QueryVulnerabilitiesAsync(string packageName)
+    public async Task<GitHubGraphQLResponse?> QueryVulnerabilitiesAsync(string packageName, string ecosystem)
     {
         try
         {
             string url = "/graphql";
             HttpClient htppClient = _httpClientFactory.CreateClient(nameof(GithubGraphQLClient));
 
-            string query = BuildVulnerabilityQuery(packageName);
+            string query = BuildVulnerabilityQuery(packageName, ecosystem);
             string json = JsonSerializer.Serialize(query);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -40,7 +37,7 @@ public class GithubGraphQLClient : IGithubGraphQLClient
 
             string responseContent = await response.Content.ReadAsStringAsync();
 
-            return JsonSerializer.Deserialize<SecurityVulnerabilities>(responseContent);
+            return JsonSerializer.Deserialize<GitHubGraphQLResponse>(responseContent);
         }
         catch (Exception ex)
         {
@@ -53,11 +50,11 @@ public class GithubGraphQLClient : IGithubGraphQLClient
 
     #region Private Methods
 
-    private string BuildVulnerabilityQuery(string packageName)
+    private string BuildVulnerabilityQuery(string packageName, string ecosystem)
     {
         return $@"
         {{
-            securityVulnerabilities(ecosystem: NPM, first: 100, package: ""{packageName}"") {{
+            securityVulnerabilities(ecosystem: ""{ecosystem}"", first: 100, package: ""{packageName}"") {{
                 nodes {{
                     severity
                     advisory {{

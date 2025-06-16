@@ -5,7 +5,12 @@ using Application.Services;
 using Application.Services.Interfaces;
 using Application.Transformer;
 using Application.Transformer.Interface;
+using Infrastructure.Facade;
+using Infrastructure.Facade.Interface;
+using Infrastructure.Handlers;
+using Infrastructure.Handlers.Interface;
 using Infrastructure.Provider;
+using Infrastructure.Provider.Interface;
 using ScannerService.Extensions;
 using Serilog;
 
@@ -26,6 +31,8 @@ builder.Services.AddSingleton<IVulnerabilityScannerTransformer, VulnerabilitySca
 builder.Services.AddSingleton<IPackageFileParserFactory, PackageFileParserFactory>();
 builder.Services.AddSingleton<IVulnerabilityScannerService, VulnerabilityScannerService>();
 builder.Services.AddSingleton<IVulnerabilityProvider, GitHubVulnerabilityProvider>();
+builder.Services.AddSingleton<IProcessVulnerabilityHandler, ProcessVulnerabilityHandler>();
+builder.Services.AddSingleton<IPackageVersionComparator, PackageVersionComparator>();
 builder.Services.AddSingleton<NpmPackageParser>();
 
 builder.Services.AddControllers();

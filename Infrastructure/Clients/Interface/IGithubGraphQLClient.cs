@@ -4,5 +4,5 @@ namespace Infrastructure.Clients.Interface;
 
 public interface IGithubGraphQLClient
 {
-    Task<SecurityVulnerabilities> QueryVulnerabilitiesAsync(string packageName);
+    Task<GitHubGraphQLResponse?> QueryVulnerabilitiesAsync(string packageName, string ecosystem);
 }

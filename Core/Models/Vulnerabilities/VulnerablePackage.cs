@@ -4,5 +4,5 @@ public class VulnerablePackage
 {
     public string Name { get; set; } = null!;
     public string Version { get; set; } = null!;
-    public List<Vulnerability> Vulnerabilities { get; set; } = new();
+    public IReadOnlyCollection<Vulnerability> Vulnerabilities { get; set; } = new List<Vulnerability>();
 }
