@@ -9,9 +9,12 @@ using Infrastructure.Facade;
 using Infrastructure.Facade.Interface;
 using Infrastructure.Handlers;
 using Infrastructure.Handlers.Interface;
+using Infrastructure.Metrics;
+using Infrastructure.Metrics.Interface;
 using Infrastructure.Provider;
 using Infrastructure.Provider.Interface;
 using ScannerService.Extensions;
+using ScannerService.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +37,8 @@ builder.Services.AddSingleton<IVulnerabilityProvider, GitHubVulnerabilityProvide
 builder.Services.AddSingleton<IProcessVulnerabilityHandler, ProcessVulnerabilityHandler>();
 builder.Services.AddSingleton<IPackageVersionComparator, PackageVersionComparator>();
 builder.Services.AddSingleton<NpmPackageParser>();
+
+builder.Services.AddSingleton<IMetricsService, MetricsService>();
 
 builder.Services.AddControllers();
 
@@ -60,7 +65,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-//app.UseMiddleware<MetricsMiddleware>();
+app.UseMiddleware<MetricsMiddleware>();
 
 app.MapControllers();
 
