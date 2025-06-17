@@ -18,8 +18,7 @@ public class PackageFileParserFactory : IPackageFileParserFactory
     {
         return (ecosystem.ToLower() switch
         {
-            "npm" => _serviceProvider.GetService<NpmPackageParser>(),
-            // future: "pip" => _serviceProvider.GetRequiredService<PipPackageParser>(),
+            "npm" => _serviceProvider.GetRequiredService<NpmPackageParser>(),
             _ => throw new NotSupportedException($"Ecosystem '{ecosystem}' is not supported.")
         })!;
     }
